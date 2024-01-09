@@ -1,14 +1,2 @@
-teht0/build/
-teht0/*user
-
-teht1/build/
-teht1/*user
-
-teht2/build/
-teht2/*user
-
-teht3/build/
-teht3/*user
-
-teht4/build/
-teht4/*user
+*/build/
+*/*user
