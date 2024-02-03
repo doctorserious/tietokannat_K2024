@@ -1,0 +1,68 @@
+1)
+mysql> SELECT opiskelija.Etunimi, opiskelija.Sukunimi,Arviointi.Arvosana,Opintojakso.Nimi
+    -> FROM Opiskelija
+    -> JOIN Arviointi ON Opiskelija.idOpiskelija = arviointi.idOpiskelija
+    -> JOIN Opintojakso ON arviointi.idOpintojakso = opintojakso.idOpintojakso
+    -> WHERE arviointi.Arvosana =0;
++---------+----------+----------+------------------+
+| Etunimi | Sukunimi | Arvosana | Nimi             |
++---------+----------+----------+------------------+
+| Aku     | Ankka    |        0 | Olio-ohjelmointi |
+| Hessu   | Hopo     |        0 | Fysiikka 3       |
+| Rey     | Mysterio |        0 | Fysiikka 3       |
++---------+----------+----------+------------------+
+3 rows in set (0.00 sec)
+
+2)
+mysql> SELECT opiskelija.Etunimi,opiskelija.Sukunimi,arviointi.Arvosana FROM opiskelija
+    -> JOIN Arviointi ON opiskelija.idOpiskelija = arviointi.idOpiskelija
+    -> JOIN Opintojakso ON arviointi.idOpintojakso = opintojakso.idOpintojakso
+    -> WHERE opintojakso.Nimi = 'Fysiikka 3' AND arviointi.Arvosana >= 1;
++---------+----------+----------+
+| Etunimi | Sukunimi | Arvosana |
++---------+----------+----------+
+| Albert  | Einstein |        5 |
++---------+----------+----------+
+1 row in set (0.00 sec)
+
+3)
+mysql> SELECT opintojakso.Nimi
+    -> FROM Opiskelija
+    -> JOIN Arviointi ON opiskelija.idOpiskelija = arviointi.idOpiskelija
+    -> JOIN Opintojakso ON arviointi.idOpintojakso = opintojakso.idOpintojakso
+    -> WHERE opiskelija.Etunimi = 'Hessu';
++------------+
+| Nimi       |
++------------+
+| Fysiikka 3 |
++------------+
+1 row in set (0.00 sec)
+
+4)
+mysql> SELECT AVG(arviointi.Arvosana) AS Keskiarvo
+    -> FROM Opiskelija
+    -> JOIN Arviointi ON opiskelija.idOpiskelija = arviointi.idOpiskelija
+    -> WHERE opiskelija.Etunimi = 'Aku';
++-----------+
+| Keskiarvo |
++-----------+
+|    0.5000 |
++-----------+
+1 row in set (0.01 sec)
+
+
+5)
+mysql> SELECT opintojakso.Nimi
+    -> FROM Opintojakso
+    -> LEFT JOIN arviointi ON opintojakso.idOpintojakso = arviointi.idOpintojakso
+    -> WHERE arviointi.idOpintojakso IS NULL;
++----------------------------------+
+| Nimi                             |
++----------------------------------+
+| Liike-elaman filosofia           |
+| Mcdonalds perehdytys             |
+| Viittomakielen alkeet            |
+| Counterstrike 2 smoket ja flasyt |
+| Projekti 2                       |
++----------------------------------+
+5 rows in set (0.00 sec)
