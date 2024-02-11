@@ -1,0 +1,41 @@
+14d. aliohjelma
+
+CREATE PROCEDURE `LisaaSuoritus`(
+IN En VARCHAR(45), 
+IN Sn VARCHAR(45), 
+IN Kd VARCHAR(45), 
+IN Arvos TINYINT)
+
+Aliohjelma: BEGIN
+	DECLARE OpiskID INT DEFAULT 0;
+    DECLARE OpintojaksoID INT DEFAULT 0;
+    
+SELECT idOpiskelija INTO OpiskID FROM opiskelija
+WHERE Etunimi = En AND Sukunimi = Sn
+LIMIT 1;
+
+IF OpiskID = 0 THEN 
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Opiskelijaa ei ole';
+    LEAVE Aliohjelma;
+END IF;
+
+SELECT idOpintojakso INTO OpintojaksoID FROM Opintojakso
+WHERE Koodi = Kd
+LIMIT 1;
+
+IF OpintojaksoID = 0 THEN 
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Opintojaksoa ei ole';
+    LEAVE Aliohjelma;
+END IF;
+
+IF Arvos < 0 OR Arvos > 5 THEN
+	SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Tarkista etta arvosana on välillä 0-5';
+    END IF;
+    
+INSERT INTO Arviointi VALUES(NULL,CURDATE(),Arvos,OpiskID,OpintojaksoID);
+SELECT 'Opintosuoritus lisätty onnistuneesti' AS Result;
+
+END
