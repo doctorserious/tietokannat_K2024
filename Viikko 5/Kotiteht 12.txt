@@ -1,0 +1,40 @@
+Syötä jokaiseen kirjastotietokannan tauluun muutama tietue.
+
+Ainakin kaksi samaa kirjaa (pitää tallentua eri pääavaimille)
+
+
+
+mysql> SELECT idKirja, teos.nimi FROM kirja JOIN teos ON teos.idTeos = kirja.idTeos WHERE teos.nimi ='Opas C-Ohjelmointiin';
++---------+----------------------+
+| idKirja | nimi                 |
++---------+----------------------+
+|      13 | Opas C-Ohjelmointiin |
+|      14 | Opas C-Ohjelmointiin |
+|      15 | Opas C-Ohjelmointiin |
++---------+----------------------+
+
+
+
+Kirja, jossa on useampi kuin yksi tekijä.
+
+
+mysql> SELECT tekija.etunimi, tekija.sukunimi, teos.nimi from tekija_teos JOIN tekija ON tekija.idTekija = tekija_teos.idTekija JOIN teos ON teos.idTeos = tekija_teos.idTeos;
++---------+----------+----------------------+
+| etunimi | sukunimi | nimi                 |
++---------+----------+----------------------+
+| Ville   | Salmi    | Opas C-Ohjelmointiin |
+| Mikko   | Salmi    | Opas C-Ohjelmointiin |
++---------+----------+----------------------+
+
+
+
+
+Lainaustapahtuma, jossa asiakas on lainannut kirjan ja se on vielä lainassa.
+
+
+mysql> SELECT * FROM lainaus WHERE idLainaus=3;
++-----------+------------+-------------+-----------+---------+------------+
+| idLainaus | LainausPVM | PalautusPVM | idAsiakas | idKirja | Palautettu |
++-----------+------------+-------------+-----------+---------+------------+
+|         3 | 2020-11-02 | 2024-02-11  |         1 |      13 |          0 |
++-----------+------------+-------------+-----------+---------+------------+
