@@ -1,0 +1,71 @@
+-- projects
+CREATE TABLE projects (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT now()
+);
+
+-- MagicDraw
+CREATE TABLE requirements (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    requirement_id TEXT NOT NULL,  -- esim. MagicDraw ID
+    title TEXT NOT NULL,
+    description TEXT,
+    version TEXT,
+    source TEXT DEFAULT 'MagicDraw',
+    created_at TIMESTAMP DEFAULT now()
+);
+
+-- Jira-backlog
+CREATE TABLE backlog_items (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    jira_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    type TEXT,  -- Epic, Story, Task, jne.
+    status TEXT,
+    description TEXT,
+    linked_requirement_id INTEGER REFERENCES requirements(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT now()
+);
+
+-- Stakeholder-needs door ng
+CREATE TABLE stakeholder_features (
+    id SERIAL PRIMARY KEY,
+    project_id INTEGER NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
+    stakeholder_name TEXT,
+    title TEXT NOT NULL,
+    description TEXT,
+    priority INTEGER,
+    linked_requirement_id INTEGER REFERENCES requirements(id) ON DELETE SET NULL,
+    linked_backlog_id INTEGER REFERENCES backlog_items(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT now()
+);
+
+MagicDraw Requirements Specification
+Jira Backlog (Epics, Tasks, User Stories, etc.)
+Features/Requests Defined by Stakeholders
+
+Key Principles for Database Design:
+A normalized structure that enables integration and traceability between different data sources
+
+Support for version control or time-based changes, especially for requirements
+
+Use of shared identifiers (or mapping IDs) across sources (e.g., Requirement → Jira Ticket → Stakeholder Request)
+
+Additional Notes or Considerations:
+Link tables may be necessary if a single requirement can be associated with multiple backlog items or vice versa (many-to-many relationships)
+
+A comment or audit trail model could be important for tracking changes in requirements or stakeholder requests
+
+Tags or categories can help classify and filter requirements or backlog items
+
+Example Use Cases for the Database:
+Show all stakeholder requests that are already covered by a Jira backlog item
+
+Display a requirement, the associated Jira Story, and the stakeholder who originally proposed it
+
+Compare different versions of a requirement over the project lifecycle
+
